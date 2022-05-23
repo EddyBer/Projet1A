@@ -1,0 +1,42 @@
+<div class=" d-flex flex-wrap justify-content-center">
+    <div>
+            <img src="./src/img/logo.png" class="img-fluid" alt="Logo de l'application">
+    </div>
+    <div class="container-fluid w-50 align-items-center">
+        <form class="border rounded-3" style="margin-top:10%;padding:5%;">
+            <!-- Email input -->
+            <div class=" mb-4">
+                <input type="email" id="email" class="form-control" placeholder="monEmail@example.com" />
+                <div id="validationServerUsernameFeedback" class="invalid-feedback">
+                    Invalid mail.
+                </div>
+                <label class="form-label" for="username">Email address</label>
+            </div>
+    
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" id="password" class="form-control" placeholder="MonMotDePasse"/>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback">
+                    Invalid password.
+                </div>
+                <label class="form-label" for="password">Password</label>
+            </div>
+    
+            <!-- Submit button -->
+            <button type="button" id="connection" class="btn btn-primary btn-block mb-4" onclick="connectController.login()" style="background-color: #2b618d !important;">Sign in</button>
+    
+            <!-- Register buttons -->
+            <div class="text-center">
+                <p>Not a member? <a onclick="navigate('creation')" style="color: blue;">Register</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="position-fixed bottom-0 end-50" style="z-index: 11">
+    <div id="error" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-body">
+            Information(s) erronées
+        </div>
+    </div>
+</div>
