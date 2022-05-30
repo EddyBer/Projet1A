@@ -1,7 +1,10 @@
 class homeController extends BaseController {
     constructor() {
         super()
-        this.getRencontre()
+        let year = new Date().getFullYear()
+        let month = new Date().getMonth()
+        this.createCalendar(calendar, year, month)
+        this.setHeaderCalendar(year,month)
     }
 
     openModal() {
@@ -26,6 +29,86 @@ class homeController extends BaseController {
         inputNoteDisplay.value = note
 
         this.myModal2.show()
+
+    }
+
+    getDay(date) { // get day number from 0 (monday) to 6 (sunday)
+        let day = date.getDay();
+        if (day == 0) day = 7; // make Sunday (0) the last day
+        return day;
+    }
+
+    createCalendar(elem, year, month) {
+        let currMonth = $("#month")
+        let currYear = $("#year")
+        currMonth.innerHTML = month
+        currYear.innerHTML = year
+        let mon = month;
+        let d = new Date(year, mon);
+  
+        let table = '<table class="table table-striped table-bordered"><tr><th scope="col">Monday</th><th scope="col">Tuesday</th><th scope="col">Wednesday</th><th scope="col">Thursday</th><th scope="col">Friday</th><th scope="col">Saturday</th><th scope="col">Sunday</th></tr><tr>';
+
+        for (let i = 1; i < this.getDay(d); i++) {
+          table += '<td></td>';
+        }
+
+        while (d.getMonth() == mon) {
+            table += "<td onclick=\"alert('test')\";>" + d.getDate() + '</td>';
+    
+            if (this.getDay(d) % 7 == 0) { // sunday, last day of week - newline
+                table += '</tr><tr>';
+            }
+    
+            d.setDate(d.getDate() + 1);
+        }
+
+        if (this.getDay(d) != 1) {
+          for (let i = this.getDay(d); i < 7; i++) {
+            table += '<td></td>';
+          }
+        }
+
+        table += '</tr></table>';
+  
+        elem.innerHTML = table;
+    }
+
+    setHeaderCalendar(year,month) {
+        let header = $('#headerCalendar')
+        let myText = ""
+        myText = this.numberToTextOfMonth(month) + " " + year
+
+        header.innerHTML = myText
+    }
+
+    nextMonth() {
+        let currMonth = parseInt($("#month").innerHTML)
+        let currYear = parseInt($("#year").innerHTML)
+
+        if (currMonth + 1 > 11) {
+            currMonth = 0
+            currYear += 1
+        } else {
+            currMonth += 1
+        }
+
+        this.createCalendar(calendar,currYear,currMonth)
+        this.setHeaderCalendar(currYear,currMonth)
+    }
+
+    prevMonth() {
+        let currMonth = parseInt($("#month").innerHTML)
+        let currYear = parseInt($("#year").innerHTML)
+
+        if (currMonth - 1 < 0) {
+            currMonth = 11
+            currYear -= 1
+        } else {
+            currMonth -= 1
+        }
+
+        this.createCalendar(calendar,currYear,currMonth)
+        this.setHeaderCalendar(currYear,currMonth)
     }
 
     async deleteRencontre(id) {
@@ -168,33 +251,6 @@ class homeController extends BaseController {
             } else {
                 this.toast("error")
             }
-        }
-    }
-
-    async getRencontre() {
-        let content = ''
-        const infosUser = this.parseJwt(localStorage.getItem('Token'))
-
-        let listOfRencontres = await this.model.getRencontres(infosUser.userId)
-
-        if (listOfRencontres.ok) {
-            const liste = await listOfRencontres.json()
-            let tbody = document.getElementById('rencontre')
-
-            liste.listOfRencontres.forEach(elem => {
-                let date = new Date (elem.date).toLocaleDateString()
-                content += `<tr style="word-break:break-word">
-                                <td>${elem.personne}</td>
-                                <td class="overflow-auto">${elem.commentaire}</td>
-                                <td>${date}</td>
-                                <td>${elem.note}/10</td>
-                                <td><i class="bi bi-trash" onclick="homeController.deleteRencontre('${elem.id}')"></i></td>
-                                <td><i class="bi bi-pencil" onclick="homeController.openModalUpdate('${elem.id}','${elem.personne}','${elem.commentaire}','${date}','${elem.note}')"></i></td>
-                                <td><i class="bi bi-cursor" onclick="alert('workInProgress')"></i></td>
-                            </tr>`
-            })
-
-            tbody.innerHTML = content
         }
     }
 }
