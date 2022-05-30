@@ -1,3 +1,7 @@
+<link rel="stylesheet" type="text/css" href="/Front/css/home.css">
+<link href='/node_modules/fullcalendar/main.css' type="text/css" rel='stylesheet' />
+<script src='/node_modules/fullcalendar/main.js'></script>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand"><span style="color: #2a638b;">Best</span><span style="color: #d43d38;">Date</span></a>
@@ -25,27 +29,20 @@
 
 <div class="container-fluid">
     <div class="">
-        <h1>My dates</h1>
+        <h1>My Agenda</h1>
         <button id="openModal" type="button" class="btn btn-primary" onclick="homeController.openModal()">
-            New date
+            New Task
         </button>
-    </div>
-    <div class="d-flex justify-content-center" id="rencontres">
-        <table class="table-responsive" style="margin-top:2%;width: 100%;">
-            <thead style="background-color: #2a638b;height: 50px;">
-                <tr style="text-align: center;">
-                    <th scope="col">Name</th>
-                    <th scope="col">Commentary</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Note</th>
-                    <th scope="col"><i class="bi bi-trash"></i></th>
-                    <th scope="col"><i class="bi bi-pencil"></i></th>
-                    <th scope="col"><i class="bi bi-cursor"></i></th>
-                </tr>
-            </thead>
-            <tbody id="rencontre">
-            </tbody>
-        </table>
+        <h2 id="headerCalendar"></h2> 
+        <button type="button" class="btn btn-default" aria-label="Left Align" onclick="homeController.prevMonth()">
+            <i class="bi bi-caret-left-fill"></i>
+        </button>
+        <p style="display: none;" id="month"></p>
+        <p style="display: none;" id="year"></p>
+        <button type="button" class="btn btn-default" aria-label="Left Align" onclick="homeController.nextMonth()">
+            <i class="bi bi-caret-right-fill"></i>
+        </button>
+        <div class="calendar" id="calendar" style="max-width: 100%; overflow:auto;"></div>
     </div>
 </div>
 
@@ -122,7 +119,7 @@
     </div>
   </div>
 
-  <div class="position-fixed bottom-0 end-50" style="z-index: 11">
+<div class="position-fixed bottom-0 end-50" style="z-index: 11">
     <div id="success" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-body">
             Date created
@@ -137,3 +134,4 @@
         </div>
     </div>
 </div>
+

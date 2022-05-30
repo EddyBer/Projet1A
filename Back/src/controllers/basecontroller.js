@@ -6,9 +6,6 @@ class BaseController {
 
     toast(elemId, text ="") {
         const toast = new bootstrap.Toast(document.getElementById(elemId))
-        if (text !== "") {
-            toast.setText(text)
-        }
         toast.show()
     }
 
@@ -51,6 +48,49 @@ class BaseController {
             }
         }
         return isValid
+    }
+
+    numberToTextOfMonth(month) {
+        let myText =""
+        switch(month) {
+            case 0:
+                myText += "January"
+                break;
+            case 1:
+                myText += "February"
+                break;
+            case 2:
+                myText += "March"
+                break;
+            case 3:
+                myText += "April"
+                break;
+            case 4:
+                myText += "Mai"
+                break;
+            case 5:
+                myText += "June"
+                break;
+            case 6:
+                myText += "July"
+                break;
+            case 7:
+                myText += "August"
+                break;
+            case 8:
+                myText += "September"
+                break;
+            case 9:
+                myText += "October"
+                break;
+            case 10:
+                myText += "November"
+                break;
+            case 11:
+                myText += "December"
+                break;
+        }
+        return myText
     }
 
     validateEmail(email) {

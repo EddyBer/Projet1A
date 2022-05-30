@@ -12,7 +12,7 @@ routerRencontre.get('/:id',authMiddleware,
             res.status('204').send('Aucune rencontres trouvées')
         } else {
             res.json({listOfRencontres})
-            res.status('200').end()
+            res.status(200).end()
         }
 })
 
