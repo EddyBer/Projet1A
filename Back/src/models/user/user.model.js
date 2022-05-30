@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
 const {sequelize} = require('../db')
-const {Rencontres} = require('../Rencontres/rencontres-model')
-const {Personnes} = require('../personnes/personnes-model')
 
 exports.User = sequelize.define('USER', {
   // Model attributes are defined here
@@ -10,24 +8,11 @@ exports.User = sequelize.define('USER', {
     primaryKey:true,
     defaultValue: DataTypes.UUIDV4
   },
-  pseudo: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique : true
-  },
   firstName: {
     type: DataTypes.STRING,
-    allowNull: true
+    allowNull: false
   },
   lastName: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  birthdate: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  gender: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -39,19 +24,7 @@ exports.User = sequelize.define('USER', {
   password: {
     type: DataTypes.STRING,
     allowNull: false
-  },
-  roles: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue : "MEMBER"
   }
 }, {
-    freezeTableName:true
+    freezeTableName:false
 });
-
-this.User.hasMany(Personnes, {
-    foreignKey: 'user'
-})
-this.User.hasMany(Rencontres, {
-    foreignKey: 'user'
-})

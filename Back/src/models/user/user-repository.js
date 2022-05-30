@@ -34,11 +34,8 @@ exports.createUser = async (body) => {
 
     const hashpassword = await bcrypt.hash(body.password,salt)
 
-    await User.create({pseudo:body.username,
-                        firstName:body.firstName,
+    await User.create({firstName:body.firstName,
                         lastName:body.name,
-                        birthdate:body.age,
-                        gender:body.gender,
                         mail:body.mail,
                         password:hashpassword})
 };

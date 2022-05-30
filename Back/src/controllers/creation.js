@@ -2,11 +2,8 @@ class creationController extends BaseController {
     constructor() {
         super()
         this.setBackButtonView('connect')
-        this.username = $('#username')
         this.name = $('#name')
         this.firstName = $('#firstname')
-        this.date = $('#age')
-        this.gender = $('#gender')
         this.mail = $('#email')
         this.password = $('#password')
         this.confirmPassword = $('#confirmPassword')
@@ -15,9 +12,9 @@ class creationController extends BaseController {
     validForm() {
         let isValid = true
 
-        if (!this.checkInput(this.username)) { isValid = false }
-        if (!this.checkInput(this.date)) { isValid = false }
-        if (!this.checkInput(this.mail)) { 
+        if (!this.checkInput(this.name)) { isValid = false }
+        if (!this.checkInput(this.firstName)) { isValid = false }
+        if (!this.checkInput(this.mail)) {
             isValid = false 
         } else { 
             if (!this.validateEmail(this.mail.value)) {
@@ -36,21 +33,22 @@ class creationController extends BaseController {
         if (this.validForm()) {
 
             const params = JSON.stringify({
-                username : this.username.value,
                 name : this.name.value,
                 firstName : this.firstName.value,
-                age : this.date.value,
-                gender : this.gender.value,
                 mail: this.mail.value,
                 password : this.password.value,
                 confirmPassword : this.confirmPassword.value
                 })
 
             const newUser = await this.model.register(params)
-            
+
             if (newUser.ok) {
-                this.toast("success")
+                setTimeout(this.toast("success"),2000)
+                //this.toast("success")
+                clearTimeout();
                 navigate('connect')
+            } else {
+                this.toast("error","Mail adress already used")
             }
         } else {
             this.toast("error")

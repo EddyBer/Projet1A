@@ -4,8 +4,11 @@ class BaseController {
         this.model = new Model()
     }
 
-    toast(elemId) {
+    toast(elemId, text ="") {
         const toast = new bootstrap.Toast(document.getElementById(elemId))
+        if (text !== "") {
+            toast.setText(text)
+        }
         toast.show()
     }
 

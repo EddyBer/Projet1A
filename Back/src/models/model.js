@@ -6,6 +6,11 @@ class Model {
         this.apiPartage = new APIPartage()
     }
 
+    async seed() {
+        let res = await this.api.seed()
+        return res
+    }
+
     async login(params) {
         let res = await this.api.login(params)
         return res

@@ -10,6 +10,7 @@ class API {
     }
 
     async register(params) {
+        //console.log(params)
         let res =  await fetch(`${this.url}register/${params}`, { method:'POST'})
         return res
     }

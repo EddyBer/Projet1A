@@ -32,10 +32,10 @@ router.post('/register/:params',
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
 
-        const user = await userRepository.getUserByPseudo(parameters.username)
+        const user = await userRepository.getUserByEmail(parameters.mail)
 
         if (user) {
-            res.status(400).send("Utilisateur déjà existant")
+            res.status(409).send("Utilisateur déjà existant")
             return;
         }
 
