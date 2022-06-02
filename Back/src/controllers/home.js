@@ -38,14 +38,14 @@ class homeController extends BaseController {
         return day;
     }
 
-    createCalendar(elem, year, month) {
+    async createCalendar(elem, year, month) {
         let currMonth = $("#month")
         let currYear = $("#year")
         currMonth.innerHTML = month
         currYear.innerHTML = year
         let mon = month;
         let d = new Date(year, mon);
-  
+        let html = ""
         let table = '<table class="table table-striped table-bordered"><tr><th scope="col">Monday</th><th scope="col">Tuesday</th><th scope="col">Wednesday</th><th scope="col">Thursday</th><th scope="col">Friday</th><th scope="col">Saturday</th><th scope="col">Sunday</th></tr><tr>';
 
         for (let i = 1; i < this.getDay(d); i++) {
@@ -53,8 +53,20 @@ class homeController extends BaseController {
         }
 
         while (d.getMonth() == mon) {
-            table += "<td onclick=\"alert('test')\";>" + d.getDate() + '</td>';
-    
+            if (this.getDay(d) == 6 || this.getDay(d) == 7) {
+                table += "<td class=\"day weekend\">" + d.getDate() + '</td>';
+            } else {
+                let task = await this.model.getByDate(this.formatDate(d))
+                //console.log(task)
+                if (task.ok) {
+                    html = `<span class=\"badge badge-primary\">Primary</span>`
+                } else {
+                    html = ""
+                }
+
+                table += "<td class=\"day week\" onclick=\"alert('test')\";>" + d.getDate() + html + '</td>';
+            }
+
             if (this.getDay(d) % 7 == 0) { // sunday, last day of week - newline
                 table += '</tr><tr>';
             }
@@ -111,140 +123,51 @@ class homeController extends BaseController {
         this.setHeaderCalendar(currYear,currMonth)
     }
 
-    async deleteRencontre(id) {
-
-        if (confirm("Voulez-vous vraiment supprimer cette rencontre ?")) {
-            const deleted = await this.model.deleteRencontre(id)
-
-            if (deleted.ok) {
-                navigate('home')
-            }
-        }
+    async deleteTask(id) {
     }
 
-    async updateRencontre() {
-        const infosUser = this.parseJwt(localStorage.getItem('Token'))
-        let personneId = ""
-        const id = document.getElementById('hiddenId')
+    async updateTask() {
+    }
 
-        let nom =  document.getElementById('name-update')
-        let date =  document.getElementById('date-update')
-        let message =  document.getElementById('message-update')
-        let note =  document.getElementById('note-update')
-        let isValid = true
+    async createTask() {
+        let nom         = $('#name-tache')
+        let datedeb     = $('#date-debut')
+        let heuredeb    = $('#heure-debut')
+        let datefin     = $('#date-debut')
+        let heurefin    = $('#heure-fin')
+        let avancement  = $('#avancement-tache')
+        let repeat      = 0
+        let isValid     = true
 
         if (!nom.value) {
             nom.className += " is-invalid"
             isValid = false
-        } else {
-            const listOfPersonnes = await this.model.getPersonnes(infosUser.userId)
-
-            if (listOfPersonnes.ok) {
-                const liste = await listOfPersonnes.json()
-                const tab = []
-                liste.listOfPersonnes.forEach(elem => {
-                        tab.push([elem.lastName, elem.id])
-                })
-
-                tab.forEach (elem => {
-                if (!elem[0].toUpperCase() === nom.value.toUpperCase()) {
-                    nom.className += " is-invalid"
-                    isValid = false
-                } else {
-                    personneId = elem[1]
-                }
-                })
-            }
-        }
-    
-        if (!date.value) {
-            date.className += " is-invalid"
-            isValid = false
-        }
-        if (message.value.length > 255) {
-            message.className += " is-invalid"
-            isValid = false
-        }
-
-        if (isValid) {
-            const params = JSON.stringify({
-                id : id.innerHTML,
-                user : infosUser.userId,
-                nom : nom.value,
-                personneId : personneId,
-                date : date.value,
-                message : message.value,
-                note : note.value
-            })
-
-            const updatedRencontre = await this.model.updateRencontre(params)
-
-            if (updatedRencontre.ok) {
-                this.myModal2.hide()
-                navigate('home')
-                this.toast('success')
-            } else {
-                this.toast("error")
-            }
-        }
-    }
-
-    async createRencontre() {
-        let nom = $('#name-rencontre')
-        let personneId = ""
-        let date = $('#date-rencontre')
-        let commentaire = $('#message-rencontre')
-        let note = $('#note-rencontre')
-        let isValid = true
-
-        const infosUser = this.parseJwt(localStorage.getItem('Token'))
-
-        if (!nom.value) {
-            nom.className += " is-invalid"
-            isValid = false
-        } else {
-            const listOfPersonnes = await this.model.getPersonnes(infosUser.userId)
-
-            if (listOfPersonnes.ok) {
-                const liste = await listOfPersonnes.json()
-                const tab = []
-                liste.listOfPersonnes.forEach(elem => {
-                        tab.push([elem.lastName, elem.id])
-                })
-
-                tab.forEach (elem => {
-                if (!elem[0].toUpperCase() === nom.value.toUpperCase()) {
-                    nom.className += " is-invalid"
-                    isValid = false
-                } else {
-                    personneId = elem[1]
-                }
-                })
-            }
         }
         
-        if (!date.value) {
-            date.className += " is-invalid"
+        if (!datedeb.value) {
+            datedeb.className += " is-invalid"
             isValid = false
         }
-        if (commentaire.value.length > 255) {
-            commentaire.className += " is-invalid"
-            isValid = false
+
+        if (!datefin.value) {
+            datefin = datedeb.value
+        } else {
+            datefin = datefin.value
         }
 
         if (isValid) {
             const params = JSON.stringify({
-                user : infosUser.userId,
-                nom : nom.value,
-                personneId : personneId,
-                date : date.value,
-                note : note.value,
-                commentaire : commentaire.value
+                libelle    : nom.value,
+                datedeb    : datedeb.value,
+                heuredeb   : heuredeb.value,
+                datefin    : datefin,
+                heurefin   : heurefin.value,
+                avancement : avancement.value
             })
 
-            const newRencontres = await this.model.createRencontre(params)
+            const newTask = await this.model.createTaches(params)
 
-            if (newRencontres.ok) {
+            if (newTask.ok) {
                 this.myModal.hide()
                 navigate('home')
                 this.toast('success')

@@ -1,0 +1,9 @@
+.day {
+    text-align: center;
+    font-weight: bold;
+}
+
+.weekend {
+    cursor: none;
+    background-color: grey;
+}

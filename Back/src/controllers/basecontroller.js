@@ -21,6 +21,11 @@ class BaseController {
         return JSON.parse(window.atob(base64));
     }
 
+    formatDate(date) {
+        let formatted_date =  date.getFullYear() + '-' +  (date.getMonth() + 1) + "-" + date.getDate()
+        return formatted_date.toString();
+    }
+
     formatDateISO(date) {
         let tabDate = date.split('/')
 

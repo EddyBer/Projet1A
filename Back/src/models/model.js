@@ -1,14 +1,7 @@
 class Model {
     constructor() {
         this.api = new API()
-        this.apiPersonne = new APIPersonne()
-        this.apiRencontre = new APIRencontre()
-        this.apiPartage = new APIPartage()
-    }
-
-    async seed() {
-        let res = await this.api.seed()
-        return res
+        this.apiTaches = new APITaches()
     }
 
     async login(params) {
@@ -21,48 +14,13 @@ class Model {
         return res
     }
 
-    async getRencontres(id) {
-        let res = await this.apiRencontre.getRencontres(id)
+    async createTaches(params) {
+        let res = await this.apiTaches.createTaches(params)
         return res
     }
 
-    async createRencontre(params) {
-        let res = await this.apiRencontre.createRencontre(params)
-        return res
-    }
-
-    async deleteRencontre(id) {
-        let res = await this.apiRencontre.deleteRencontre(id)
-        return res
-    }
-
-    async updateRencontre(params) {
-        let res = await this.apiRencontre.updateRencontre(params)
-        return res
-    }
-
-    async getPersonnes(id) {
-        let res = await this.apiPersonne.getPersonnes(id)
-        return res
-    }
-
-    async createPersonne(params) {
-        let res = await this.apiPersonne.createPersonne(params)
-        return res
-    }
-
-    async deletePersonne(id) {
-        let res = await this.apiPersonne.deletePersonne(id)
-        return res
-    }
-
-    async updatePersonne(params) {
-        let res = await this.apiPersonne.updatePersonne(params)
-        return res
-    }
-
-    async getPartages() {
-        let res = await this.apiPartage.getAll()
+    async getByDate(datedeb) {
+        let res = await this.apiTaches.getTachesByDate(datedeb)
         return res
     }
 }

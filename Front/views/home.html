@@ -1,6 +1,4 @@
 <link rel="stylesheet" type="text/css" href="/Front/css/home.css">
-<link href='/node_modules/fullcalendar/main.css' type="text/css" rel='stylesheet' />
-<script src='/node_modules/fullcalendar/main.js'></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
@@ -50,33 +48,48 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Your Date</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Your Task</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form>
             <div class="mb-3">
               <label for="recipient-name" class="col-form-label">Name</label>
-              <input type="text" class="form-control" id="name-rencontre">
+              <input type="text" class="form-control" id="name-tache">
             </div>
             <div class="mb-3">
-              <label for="message-text" class="col-form-label">Date</label>
-              <input type="date" class="form-control" id="date-rencontre"></input>
+              <label for="message-text" class="col-form-label">Start</label>
+              <input type="date" class="form-control" id="date-debut"></input>
+              <input type="time" min="08:00:00" max="18:00:00" value="08:00" class="form-control" id="heure-debut"></input>
             </div>
             <div class="mb-3">
-                <label for="message-text" class="col-form-label">Commentary (255 carac max)</label>
-                <textarea class="form-control" id="message-rencontre"></textarea>
-            </div>
+                <label for="message-text" class="col-form-label">End</label>
+                <input type="date" class="form-control" id="date-fin"></input>
+                <input type="time" min="08:00:00" max="18:00:00" value="18:00" class="form-control" id="heure-fin"></input>
+              </div>
             <div class="mb-3">
-                <label for="message-text" class="col-form-label">Note from 0 to 10</label>
-                <input type="range" class="form-range" min="0" max="10"id="note-rencontre" oninput="this.nextElementSibling.value = this.value"></input>
-                <output>5</output>
+                <label for="message-text" class="col-form-label">Advencement in %</label>
+                <input type="range" value="0" class="form-range" min="0" max="100"id="avancement-tache" oninput="this.nextElementSibling.value = this.value" readonly></input>
+                <output>0</output>
+            </div>
+            <div class="mb-3 form-check" style="display:none">
+                <label for="message-text" class="col-form-label">Repeat</label>
+                <input type="checkbox" class="form-check-input" id="repaet-daily" ></input>
+            </div>
+            <div class="mb-3 form-check" style="display:none">
+                <label class="form-check-label" for="repaet-daily">Daily</label>
+                <input type="checkbox" class="form-check-input" id="repeat-weekly"></input>
+            </div>
+            <div class="mb-3 form-check" style="display:none">
+                <label class="form-check-label" for="repeat-weekly">Weekly</label>
+                <input type="checkbox" class="form-check-input" id="repaet-monthly"></input>
+                <label class="form-check-label" for="repaet-monthly">Monthly</label>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="validButton"type="button" class="btn btn-primary" onclick="homeController.createRencontre()">Ajouter rencontre</button>
+          <button id="validButton"type="button" class="btn btn-primary" onclick="homeController.createTask()">Add task</button>
         </div>
       </div>
     </div>

@@ -1,26 +1,26 @@
 const express = require('express');
-const routerRencontre = express.Router();
-const rencontresRepository = require('../../models/Rencontres/rencontre-repository');
+const routerTaches = express.Router();
+const tachesRepository = require('../../models/taches/taches-repository');
 const { authMiddleware } = require('../../core/middlewares')
 
-routerRencontre.get('/:id',authMiddleware,
+routerTaches.get('/:datedeb',authMiddleware,
     async (req,res) => {
+        const taches = await tachesRepository.getByDate(req.params.datedeb)
         
-        const listOfRencontres = await rencontresRepository.getAllById(req.params.id)
-        
-        if (!listOfRencontres) {
-            res.status('204').send('Aucune rencontres trouvées')
+        if (!taches) {
+            res.status(404).send('Aucune taches trouvées')
+            console.log(taches)
         } else {
-            res.json({listOfRencontres})
+            res.json({taches})
             res.status(200).end()
         }
 })
 
-routerRencontre.post('/create/:params',authMiddleware,
+routerTaches.post('/create/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
-
-        const newRencontres = await rencontresRepository.createRencontre(parameters)
+console.log(parameters)
+        const newRencontres = await tachesRepository.createTaches(parameters)
 
         if (newRencontres) {
             res.status(400).send("Erreur lors de la création")
@@ -30,10 +30,10 @@ routerRencontre.post('/create/:params',authMiddleware,
         }
 })
 
-routerRencontre.delete('/delete/:id',authMiddleware,
+routerTaches.delete('/delete/:id',authMiddleware,
     async (req,res) => {
 
-        const deleted = await rencontresRepository.deleteRencontre(req.params.id)
+        const deleted = await tachesRepository.deleteTaches(req.params.id)
 
         if (!deleted) {
             res.status('200').end()
@@ -42,11 +42,11 @@ routerRencontre.delete('/delete/:id',authMiddleware,
         }
 })
 
-routerRencontre.put('/update/:params',authMiddleware,
+routerTaches.put('/update/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
 
-        const updatedRencontre = await rencontresRepository.updateRencontre(parameters)
+        const updatedRencontre = await tachesRepository.updateTaches(parameters)
 
         if (updatedRencontre) {
             res.status(400).send("Erreur lors de la mise à jour")
@@ -56,4 +56,4 @@ routerRencontre.put('/update/:params',authMiddleware,
         }
 })
 
-exports.initializeRoutesRencontre = () => routerRencontre;
+exports.initializeRoutesTaches = () => routerTaches;
