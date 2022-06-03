@@ -15,12 +15,28 @@ class Model {
     }
 
     async createTaches(params) {
-        let res = await this.apiTaches.createTaches(params)
+        let res = await this.apiTaches.createTask(params)
         return res
     }
 
+    async deleteTask(id) {
+        let res = await this.apiTaches.deleteTask(id)
+        return res
+    }
+
+    async updateTask(id) {
+        let res = await this.apiTaches.updateTask(id)
+        return res
+    }
+
+
     async getByDate(datedeb) {
         let res = await this.apiTaches.getTachesByDate(datedeb)
+        return res
+    }
+
+    async getById(id) {
+        let res = await this.apiTaches.getById(id)
         return res
     }
 }

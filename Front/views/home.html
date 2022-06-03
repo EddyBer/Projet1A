@@ -88,45 +88,6 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="validButton"type="button" class="btn btn-primary" onclick="homeController.createTask()">Add task</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modify informations</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="d-none" id="hiddenId"></div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="recipient-name" class="col-form-label">Name</label>
-              <input type="text" class="form-control" id="name-update">
-            </div>
-            <div class="mb-3">
-              <label for="message-text" class="col-form-label">Date</label>
-              <input type="date" class="form-control" id="date-update"></input>
-            </div>
-            <div class="mb-3">
-                <label for="message-text" class="col-form-label">Commentary (255 carac max)</label>
-                <textarea class="form-control" id="message-update"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="message-text" class="col-form-label">Note from 0 to 10</label>
-                <input type="range" class="form-range" min="0" max="10"id="note-update" oninput="this.nextElementSibling.value = this.value"></input>
-                <output id = "note-update-display"></output>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button id="validButton"type="button" class="btn btn-primary" onclick="homeController.updateRencontre()">Modifier rencontre</button>
         </div>
       </div>
     </div>
@@ -135,7 +96,7 @@
 <div class="position-fixed bottom-0 end-50" style="z-index: 11">
     <div id="success" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-body">
-            Date created
+            Task created
         </div>
     </div>
 </div>

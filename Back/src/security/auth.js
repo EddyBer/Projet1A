@@ -9,7 +9,6 @@ exports.generateAuthToken = (userId, firstName, roles) => {
 };
 
 exports.verifyToken = (req,res,next) => {
-    console.log(req)
     let token = req.body.token || req.query.token || req.headers["x-access-token"];
 
     if (!token) {

@@ -9,7 +9,18 @@ routerTaches.get('/:datedeb',authMiddleware,
         
         if (!taches) {
             res.status(404).send('Aucune taches trouvées')
-            console.log(taches)
+        } else {
+            res.json({taches})
+            res.status(200).end()
+        }
+})
+
+routerTaches.get('/infos/:id',authMiddleware,
+    async (req,res) => {
+        const taches = await tachesRepository.getById(req.params.id)
+        
+        if (!taches) {
+            res.status(404).send('Aucune taches trouvées')
         } else {
             res.json({taches})
             res.status(200).end()
@@ -19,7 +30,7 @@ routerTaches.get('/:datedeb',authMiddleware,
 routerTaches.post('/create/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
-console.log(parameters)
+
         const newRencontres = await tachesRepository.createTaches(parameters)
 
         if (newRencontres) {
@@ -45,10 +56,10 @@ routerTaches.delete('/delete/:id',authMiddleware,
 routerTaches.put('/update/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
+console.log(parameters)
+        const updatedTask = await tachesRepository.updateTask(parameters)
 
-        const updatedRencontre = await tachesRepository.updateTaches(parameters)
-
-        if (updatedRencontre) {
+        if (updatedTask) {
             res.status(400).send("Erreur lors de la mise à jour")
             return;
         } else {

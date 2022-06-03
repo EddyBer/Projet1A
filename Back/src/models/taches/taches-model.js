@@ -14,7 +14,7 @@ exports.Taches = sequelize.define('TACHES', {
     allowNull: false
   },
   datedeb: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: false,
     unique : true
   },
@@ -23,7 +23,7 @@ exports.Taches = sequelize.define('TACHES', {
     allowNull: true
   },
   datefin: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: true
   },
   heurefin: {

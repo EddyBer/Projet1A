@@ -11,7 +11,8 @@ exports.createTaches = async (body) => {
     })
 }
 
-exports.updateTaches = async (body) => {
+exports.updateTask = async (body) => {
+    console.log(body)
     await Taches.update({
         libelle   : body.libelle,
         datedeb   : body.nom,
@@ -33,14 +34,15 @@ exports.deleteTaches= async (id) => {
 }
 
 exports.getByDate = async (date) => {
-    let newDate = new Date(date)
-    newDate.setHours(00)
-    console.log(newDate)
     return await Taches.findOne({
         where: {
-            datedeb:newDate
+            datedeb:date
         }
     })
+}
+
+exports.getById= async (id) => {
+    return await Taches.findByPk(id)
 }
 
 exports.getAll = async (id) => {
