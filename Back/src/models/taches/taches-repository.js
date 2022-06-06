@@ -12,13 +12,13 @@ exports.createTaches = async (body) => {
 }
 
 exports.updateTask = async (body) => {
-    console.log(body)
     await Taches.update({
-        libelle   : body.libelle,
-        datedeb   : body.nom,
-        heuredeb  : body.personneId,
-        datefin   : body.date,
-        heurefin  : body.note},
+        libelle    : body.libelle,
+        datedeb    : body.datedeb,
+        heuredeb   : body.heuredeb,
+        datefin    : body.datefin,
+        heurefin   : body.heurefin,
+        avancement : body.avancement},
         { where: {
             id: body.id
           }

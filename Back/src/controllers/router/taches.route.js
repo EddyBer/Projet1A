@@ -56,7 +56,7 @@ routerTaches.delete('/delete/:id',authMiddleware,
 routerTaches.put('/update/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
-console.log(parameters)
+        
         const updatedTask = await tachesRepository.updateTask(parameters)
 
         if (updatedTask) {

@@ -3,12 +3,20 @@ class homeController extends BaseController {
         super()
         let year = new Date().getFullYear()
         let month = new Date().getMonth()
+        let next = $('#next')
+        let prev = $('#prev')
+        next.setAttribute('onclick',"homeController.nextMonth()")
+        prev.setAttribute('onclick',"homeController.prevMonth()")
         this.createCalendar(calendar, year, month)
         this.setHeaderCalendar(year,month)
     }
 
     openModal() {
         let modalFooter = $('.modal-footer')
+        let div_ad      = $('#ad')
+
+        div_ad.style.display = 'none'
+
         modalFooter.innerHTML =  '<button type=\"button\" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'
         modalFooter.innerHTML += '<button id="validButton"type="button" class="btn btn-primary" onclick="homeController.createTask()">Add task</button>'
         this.myModal = new bootstrap.Modal(document.getElementById('createModal'), 'keyboard=true')
@@ -23,6 +31,9 @@ class homeController extends BaseController {
         let datefin     = $('#date-debut')
         let heurefin    = $('#heure-fin')
         let avancement  = $('#avancement-tache')
+        let div_ad      = $('#ad')
+
+        div_ad.style.display = ''
 
         let modalFooter = $('.modal-footer')
         modalFooter.innerHTML =  '<button type=\"button\" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'
@@ -103,6 +114,85 @@ class homeController extends BaseController {
         elem.innerHTML = table;
     }
 
+
+    async createCalendarDay(elem, date) {
+        let currMonth = $("#month")
+        let currYear = $("#year")
+        let currDate = $("#date")
+        currMonth.innerHTML = date.getMonth()
+        currYear.innerHTML = date.getFullYear()
+        currDate.innerHTML = date
+
+        let d = new Date(date);
+
+        let html = ""
+        let onclick = ""
+        let table = '<table class="table table-striped table-bordered"><tr>'
+
+        switch (this.getDay(d)) {
+            case 1:
+                table += '<th scope="col">Monday</th></tr><tr>' ;
+                break;
+            case 2:
+                table += '<th scope="col">Tuesday</th></tr><tr>';
+                break;
+            case 3:
+                table += '<th scope="col">Wednesday</th></tr><tr>';
+                break;
+            case 4:
+                table += '<th scope="col">Thursday</th></tr><tr>';
+                break;
+            case 5:
+                table += '<th scope="col">Friday</th></tr><tr>';
+                break;
+            case 6:
+                table += '<th scope="col">Saturday</th></tr><tr>';
+                break;
+            case 7:
+                table += '<th scope="col">Sunday</th></tr><tr>';
+                break;
+        }
+
+        if (this.getDay(d) == 6 || this.getDay(d) == 7) {
+            table += "<td class=\"day weekend\">" + d.getDate() + '</td>';
+        } else {
+            console.log(this.formatDate(d))
+            let task = await this.model.getByDate(this.formatDate(d))
+            if (task.ok) {
+                task = await task.json()
+                html = `<span id=\"${task.taches.id}\" class=\"badge bg-success\">${task.taches.libelle}</span>`
+                onclick = `homeController.openModalUpdate('${task.taches.id}')`
+            } else {
+                html = ""
+                onclick = ""
+            }
+
+            table += `<td class=\"day week\" onclick=\"${onclick}\";>` + d.getDate() + html + '</td>';
+        }
+
+        table += '</tr></table>';
+  
+        elem.innerHTML = table;
+    }
+
+    nextDay() {
+        let currDate = new Date($("#date").innerHTML)
+
+        currDate.setDate(currDate.getDate() + 1);
+
+        this.createCalendarDay(calendar,currDate)
+        this.setHeaderCalendar(currDate.getFullYear(),currDate.getMonth())
+    }
+
+    prevDay() {
+        let currDate = new Date($("#date").innerHTML)
+
+        currDate.setDate(currDate.getDate() - 1);
+
+        this.createCalendarDay(calendar,currDate)
+        this.setHeaderCalendar(currDate.getFullYear(),currDate.getMonth())
+    }
+
     setHeaderCalendar(year,month) {
         let header = $('#headerCalendar')
         let myText = ""
@@ -141,6 +231,32 @@ class homeController extends BaseController {
         this.setHeaderCalendar(currYear,currMonth)
     }
 
+    setDisplay() {
+        let display = $('#display')
+        let year    = new Date().getFullYear()
+        let month   = new Date().getMonth()
+        let day     = new Date().getDate()
+        let next = $('#next')
+        let prev = $('#prev')
+
+        switch (display.value) {
+            case 'M':
+                this.createCalendar(calendar, year, month)
+                next.setAttribute('onclick',"homeController.nextMonth()")
+                prev.setAttribute('onclick',"homeController.prevMonth()")
+                this.setHeaderCalendar(year,month)
+                break
+            case 'W':
+                this.createCalendarWeek(calendar, year, month,day)
+                break
+            case 'D':
+                this.createCalendarDay(calendar, new Date())
+                next.setAttribute('onclick',"homeController.nextDay()")
+                prev.setAttribute('onclick',"homeController.prevDay()")
+                break
+        }
+    }
+
     async deleteTask(id) {
         const task = await this.model.deleteTask(id)
 
@@ -171,12 +287,28 @@ class homeController extends BaseController {
         if (!datedeb.value) {
             datedeb.className += " is-invalid"
             isValid = false
+        } else if(datedeb.value) {
+            let dateTmp = new Date(datedeb.value)
+            dateTmp = dateTmp.getDay()
+
+            if (dateTmp == 0 || dateTmp == 6) {
+                datedeb.className += " is-invalid"
+                isValid = false
+            }
         }
 
         if (!datefin.value) {
             datefin = datedeb.value
         } else {
-            datefin = datefin.value
+            let dateTmp = new Date(datefin.value)
+            dateTmp = dateTmp.getDay()
+
+            if (dateTmp == 0 || dateTmp == 6) {
+                datefin.className += " is-invalid"
+                isValid = false
+            } else {
+                datefin = datefin.value
+            }
         }
 
         if (isValid) {
@@ -215,11 +347,21 @@ class homeController extends BaseController {
         if (!nom.value) {
             nom.className += " is-invalid"
             isValid = false
+        } else {
+            nom.classList.remove('is-invalid')
         }
         
         if (!datedeb.value) {
             datedeb.className += " is-invalid"
             isValid = false
+        } else if(datedeb.value) {
+            let dateTmp = new Date(datedeb.value)
+            dateTmp = dateTmp.getDay()
+
+            if (dateTmp == 0 || dateTmp == 6) {
+                datedeb.className += " is-invalid"
+                isValid = false
+            }
         }
 
         if (!datefin.value) {

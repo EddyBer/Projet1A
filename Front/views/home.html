@@ -12,12 +12,6 @@
             <a class="nav-link active" aria-current="page" onclick="navigate('home')">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" onclick="navigate('personnes')">My profil</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" onclick="navigate('partage')">Posts</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" onclick="navigate('connect')">Logout</a>
           </li>
         </ul>
@@ -27,21 +21,26 @@
 
 <div class="container-fluid">
     <div class="">
-        <h1>My Agenda</h1>
+        <h2 id="headerCalendar"></h2>
         <button id="openModal" type="button" class="btn btn-primary" onclick="homeController.openModal()">
             New Task
         </button>
-        <h2 id="headerCalendar"></h2> 
-        <button type="button" class="btn btn-default" aria-label="Left Align" onclick="homeController.prevMonth()">
+        <button type="button" class="btn btn-default" aria-label="Left Align" id="prev" onclick="">
             <i class="bi bi-caret-left-fill"></i>
         </button>
         <p style="display: none;" id="month"></p>
         <p style="display: none;" id="year"></p>
-        <button type="button" class="btn btn-default" aria-label="Left Align" onclick="homeController.nextMonth()">
+        <p style="display: none;" id="date"></p>
+        <button type="button" class="btn btn-default" aria-label="Left Align" id="next" onclick="">
             <i class="bi bi-caret-right-fill"></i>
         </button>
-        <div class="calendar" id="calendar" style="max-width: 100%; overflow:auto;"></div>
+        <select class="form-select" style="max-width: 20%;width:auto" onchange="homeController.setDisplay()" id="display">
+            <option value="M" selected>Month</option>
+            <option value="W">Week</option>
+            <option value="D">Day</option>
+        </select>
     </div>
+    <div class="calendar" id="calendar" style="max-width: 100%; overflow:auto;"></div>
 </div>
 
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -67,7 +66,7 @@
                 <input type="date" class="form-control" id="date-fin"></input>
                 <input type="time" min="08:00:00" max="18:00:00" value="18:00" class="form-control" id="heure-fin"></input>
               </div>
-            <div class="mb-3">
+            <div class="mb-3" id="ad">
                 <label for="message-text" class="col-form-label">Advencement in %</label>
                 <input type="range" value="0" class="form-range" min="0" max="100"id="avancement-tache" oninput="this.nextElementSibling.value = this.value" readonly></input>
                 <output>0</output>
