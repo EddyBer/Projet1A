@@ -39,4 +39,19 @@ class Model {
         let res = await this.apiTaches.getById(id)
         return res
     }
+
+    async getAll() {
+        let res = await this.apiTaches.getAll()
+        return res
+    }
+
+    async getComing() {
+        let res = await this.apiTaches.getComing()
+        return res
+    }
+
+    async getPast() {
+        let res = await this.apiTaches.getPast()
+        return res
+    }
 }

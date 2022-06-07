@@ -4,6 +4,24 @@ class APITaches extends API {
         this.newUrl = this.url + 'taches/'
     }
 
+    async getAll() {
+        let res =  await fetch(`${this.newUrl}list/all`, { method:'GET',
+                                                        headers : this.header})
+        return res
+    }
+
+    async getComing() {
+        let res =  await fetch(`${this.newUrl}list/coming`, { method:'GET',
+                                                        headers : this.header})
+        return res
+    }
+
+    async getPast() {
+        let res =  await fetch(`${this.newUrl}list/past`, { method:'GET',
+                                                        headers : this.header})
+        return res
+    }   
+
     async getById(id) {
         let res =  await fetch(`${this.newUrl}infos/${id}`, { method:'GET',
                                                         headers : this.header})

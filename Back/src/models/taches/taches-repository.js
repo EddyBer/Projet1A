@@ -1,3 +1,4 @@
+const { sequelize } = require('../db')
 const {Taches} = require('./taches-model')
 
 exports.createTaches = async (body) => {
@@ -45,6 +46,18 @@ exports.getById= async (id) => {
     return await Taches.findByPk(id)
 }
 
-exports.getAll = async (id) => {
+exports.getAll = async () => {
     return await Taches.findAll()
+}
+
+exports.getComing = async () => {
+    let now = new Date()
+    now = now.toISOString()
+    return await sequelize.query(`SELECT * FROM "TACHES" WHERE DATEDEB > '${now}'`)
+}
+
+exports.getPast = async () => {
+    let now = new Date()
+    now = now.toISOString()
+    return await sequelize.query(`SELECT * FROM "TACHES" WHERE DATEDEB < '${now}' AND AVANCEMENT < 100`)
 }

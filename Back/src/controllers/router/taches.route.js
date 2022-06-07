@@ -27,6 +27,42 @@ routerTaches.get('/infos/:id',authMiddleware,
         }
 })
 
+routerTaches.get('/list/all',authMiddleware,
+    async (req,res) => {
+        const taches = await tachesRepository.getAll()
+        
+        if (!taches) {
+            res.status(404).send('Aucune taches trouvées')
+        } else {
+            res.json({taches})
+            res.status(200).end()
+        }
+})
+
+routerTaches.get('/list/coming',authMiddleware,
+    async (req,res) => {
+        const taches = await tachesRepository.getComing()
+        
+        if (!taches) {
+            res.status(404).send('Aucune taches trouvées')
+        } else {
+            res.json({taches})
+            res.status(200).end()
+        }
+})
+
+routerTaches.get('/list/past',authMiddleware,
+    async (req,res) => {
+        const taches = await tachesRepository.getPast()
+        
+        if (!taches) {
+            res.status(404).send('Aucune taches trouvées')
+        } else {
+            res.json({taches})
+            res.status(200).end()
+        }
+})
+
 routerTaches.post('/create/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
@@ -56,7 +92,7 @@ routerTaches.delete('/delete/:id',authMiddleware,
 routerTaches.put('/update/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
-        
+
         const updatedTask = await tachesRepository.updateTask(parameters)
 
         if (updatedTask) {

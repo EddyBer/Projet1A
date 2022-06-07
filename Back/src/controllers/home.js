@@ -31,9 +31,10 @@ class homeController extends BaseController {
         let datefin     = $('#date-debut')
         let heurefin    = $('#heure-fin')
         let avancement  = $('#avancement-tache')
+        let output_adv  = $('#output_adv')
         let div_ad      = $('#ad')
-
-        div_ad.style.display = ''
+        let today       = new Date()
+        
 
         let modalFooter = $('.modal-footer')
         modalFooter.innerHTML =  '<button type=\"button\" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'
@@ -50,10 +51,19 @@ class homeController extends BaseController {
             heuredeb.value   = task.taches.heuredeb 
             datefin.value    = task.taches.datefin 
             heurefin.value   = task.taches.heurefin 
-            avancement.value = task.taches.avancement 
+            avancement.value = task.taches.avancement
+            output_adv.value = task.taches.avancement
         } else {
             this.toast("error")
         }
+
+        let dateToCompare = new Date(task.taches.datedeb)
+        if (dateToCompare.getTime() < today.getTime()) {
+            div_ad.style.display = ''
+        } else {
+            div_ad.style.display = 'none'
+        }
+
         this.myModal.show()
 
     }
@@ -114,6 +124,55 @@ class homeController extends BaseController {
         elem.innerHTML = table;
     }
 
+    async createCalendarWeek(elem, year, month,date) {
+        let currMonth = $("#month")
+        let currYear = $("#year")
+        currMonth.innerHTML = month
+        currYear.innerHTML = year
+        let mon = month;
+        let d = new Date(year, mon);
+        let html = ""
+        let onclick = ""
+        let table = '<table class="table table-striped table-bordered"><tr><th scope="col">Monday</th><th scope="col">Tuesday</th><th scope="col">Wednesday</th><th scope="col">Thursday</th><th scope="col">Friday</th><th scope="col">Saturday</th><th scope="col">Sunday</th></tr><tr>';
+
+        for (let i = 1; i < this.getDay(d); i++) {
+          table += '<td></td>';
+        }
+
+        while (d.getMonth() == mon) {
+            if (this.getDay(d) == 6 || this.getDay(d) == 7) {
+                table += "<td class=\"day weekend\">" + d.getDate() + '</td>';
+            } else {
+                let task = await this.model.getByDate(this.formatDate(d))
+                if (task.ok) {
+                    task = await task.json()
+                    html = `<span id=\"${task.taches.id}\" class=\"badge bg-success\">${task.taches.libelle}</span>`
+                    onclick = `homeController.openModalUpdate('${task.taches.id}')`
+                } else {
+                    html = ""
+                    onclick = ""
+                }
+
+                table += `<td class=\"day week\" onclick=\"${onclick}\";>` + d.getDate() + html + '</td>';
+            }
+
+            if (this.getDay(d) % 7 == 0) { // sunday, last day of week - newline
+                table += '</tr><tr>';
+            }
+    
+            d.setDate(d.getDate() + 1);
+        }
+
+        if (this.getDay(d) != 1) {
+          for (let i = this.getDay(d); i < 7; i++) {
+            table += '<td></td>';
+          }
+        }
+
+        table += '</tr></table>';
+  
+        elem.innerHTML = table;
+    }
 
     async createCalendarDay(elem, date) {
         let currMonth = $("#month")
@@ -341,7 +400,6 @@ class homeController extends BaseController {
         let datefin     = $('#date-debut')
         let heurefin    = $('#heure-fin')
         let avancement  = $('#avancement-tache')
-        let repeat      = 0
         let isValid     = true
 
         if (!nom.value) {
