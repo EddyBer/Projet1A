@@ -35,11 +35,9 @@ exports.deleteTaches= async (id) => {
 }
 
 exports.getByDate = async (date) => {
-    return await Taches.findAll({
-        where: {
-            datedeb:date
-        }
-    })
+    
+    return await sequelize.query(`SELECT * FROM "TACHES" WHERE (DATEDEB <= '${date}' AND DATEFIN >= '${date}') OR (DATEDEB = '${date}' AND DATEFIN = '${date}')`)
+
 }
 
 exports.getConflict = async (body) => {

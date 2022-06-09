@@ -96,16 +96,15 @@ class homeController extends BaseController {
             if (this.getDay(d) == 6 || this.getDay(d) == 7) {
                 table += "<td class=\"day weekend\">" + d.getDate() + '</td>';
             } else {
+                html = ""
                 let task = await this.model.getByDate(this.formatDate(d))
                 if (task.ok) {
                     task = await task.json()
-
-                    if (task.taches.length > 0) {
-                        task.taches.forEach(elem => {
+                    if (task.taches[0].length > 0) {
+                        task.taches[0].forEach(elem => {
                             html += `<span id=\"${elem.id}\" class=\"badge bg-success\" onclick=\"homeController.openModalUpdate('${elem.id}')\">${elem.libelle}</span>`
                             onclick = ``
                         });
-                        
                     } else {
                         html = ""
                         onclick = `homeController.openModal()`
@@ -118,7 +117,6 @@ class homeController extends BaseController {
             if (this.getDay(d) % 7 == 0) { // sunday, last day of week - newline
                 table += '</tr><tr>';
             }
-    
             d.setDate(d.getDate() + 1);
         }
 
@@ -375,7 +373,7 @@ class homeController extends BaseController {
         let nom         = $('#name-tache')
         let datedeb     = $('#date-debut')
         let heuredeb    = $('#heure-debut')
-        let datefin     = $('#date-debut')
+        let datefin     = $('#date-fin')
         let heurefin    = $('#heure-fin')
         let avancement  = $('#avancement-tache')
         let repeat      = 0
@@ -402,6 +400,11 @@ class homeController extends BaseController {
         if (!datefin.value) {
             datefin = datedeb.value
         } else {
+
+            if (datedeb.value > datefin.value) {
+                datefin.className += " is-invalid"
+                isValid = false
+            }
             let dateTmp = new Date(datefin.value)
             dateTmp = dateTmp.getDay()
 
@@ -431,7 +434,7 @@ class homeController extends BaseController {
                 navigate('home')
                 this.toast('success')
             } else {
-                this.toast("error")
+                this.toast("error", "Mise à jour impossible")
             }
         }
     }
@@ -440,7 +443,7 @@ class homeController extends BaseController {
         let nom         = $('#name-tache')
         let datedeb     = $('#date-debut')
         let heuredeb    = $('#heure-debut')
-        let datefin     = $('#date-debut')
+        let datefin     = $('#date-fin')
         let heurefin    = $('#heure-fin')
         let avancement  = $('#avancement-tache')
         let isValid     = true
@@ -468,7 +471,19 @@ class homeController extends BaseController {
         if (!datefin.value) {
             datefin = datedeb.value
         } else {
-            datefin = datefin.value
+            if (datedeb.value > datefin.value) {
+                datefin.className += " is-invalid"
+                isValid = false
+            }
+            let dateTmp = new Date(datefin.value)
+            dateTmp = dateTmp.getDay()
+
+            if (dateTmp == 0 || dateTmp == 6) {
+                datefin.className += " is-invalid"
+                isValid = false
+            } else {
+                datefin = datefin.value
+            }
         }
 
         if (isValid) {

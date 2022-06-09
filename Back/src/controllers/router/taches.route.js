@@ -112,13 +112,21 @@ routerTaches.put('/update/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
 
-        const updatedTask = await tachesRepository.updateTask(parameters)
 
-        if (updatedTask) {
-            res.status(400).send("Erreur lors de la mise à jour")
-            return;
+        const [results, metadata] = await tachesRepository.getConflict(parameters)
+
+        if (results.length > 0) {
+            res.status(400).send("Une tâche existe déjà sur cette période")
+            return
         } else {
-            res.status(204).end()
+            const updatedTask = await tachesRepository.updateTask(parameters)
+
+            if (updatedTask) {
+                res.status(400).send("Erreur lors de la mise à jour")
+                return;
+            } else {
+                res.status(204).end()
+            }
         }
 })
 
