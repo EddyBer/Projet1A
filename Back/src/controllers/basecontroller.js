@@ -5,6 +5,8 @@ class BaseController {
     }
 
     toast(elemId, text ="") {
+        let body = document.getElementById("toast-body")
+        body.innerHTML = text
         const toast = new bootstrap.Toast(document.getElementById(elemId))
         toast.show()
     }

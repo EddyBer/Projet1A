@@ -14,7 +14,10 @@ class homeController extends BaseController {
     openModal() {
         let modalFooter = $('.modal-footer')
         let div_ad      = $('#ad')
-
+        let nom         = $('#name-tache')
+        nom.value       = ""
+        let datedeb     = $('#date-debut')
+        datedeb.value   = ""
         div_ad.style.display = 'none'
 
         modalFooter.innerHTML =  '<button type=\"button\" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>'
@@ -96,11 +99,18 @@ class homeController extends BaseController {
                 let task = await this.model.getByDate(this.formatDate(d))
                 if (task.ok) {
                     task = await task.json()
-                    html = `<span id=\"${task.taches.id}\" class=\"badge bg-success\">${task.taches.libelle}</span>`
-                    onclick = `homeController.openModalUpdate('${task.taches.id}')`
-                } else {
-                    html = ""
-                    onclick = ""
+
+                    if (task.taches.length > 0) {
+                        console.log(task)
+                        task.taches.forEach(elem => {
+                            html += `<span id=\"${elem.id}\" class=\"badge bg-success\" onclick=\"homeController.openModalUpdate('${elem.id}')\">${elem.libelle}</span>`
+                            onclick = ``
+                        });
+                        
+                    } else {
+                        html = ""
+                        onclick = `homeController.openModal()`
+                    }
                 }
 
                 table += `<td class=\"day week\" onclick=\"${onclick}\";>` + d.getDate() + html + '</td>';
@@ -223,7 +233,7 @@ class homeController extends BaseController {
                 onclick = `homeController.openModalUpdate('${task.taches.id}')`
             } else {
                 html = ""
-                onclick = ""
+                onclick = `homeController.openModal()`
             }
 
             table += `<td class=\"day week\" onclick=\"${onclick}\";>` + d.getDate() + html + '</td>';
@@ -439,13 +449,13 @@ class homeController extends BaseController {
             })
 
             const newTask = await this.model.createTaches(params)
-
+            console.log(newTask)
             if (newTask.ok) {
                 this.myModal.hide()
                 navigate('home')
                 this.toast('success')
             } else {
-                this.toast("error")
+                this.toast("error","Creation Failed")
             }
         }
     }

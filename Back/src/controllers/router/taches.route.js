@@ -51,6 +51,18 @@ routerTaches.get('/list/coming',authMiddleware,
         }
 })
 
+routerTaches.get('/list/current',authMiddleware,
+    async (req,res) => {
+        const taches = await tachesRepository.getCurrent()
+
+        if (!taches) {
+            res.status(404).send('Aucune taches trouvées')
+        } else {
+            res.json({taches})
+            res.status(200).end()
+        }
+})
+
 routerTaches.get('/list/past',authMiddleware,
     async (req,res) => {
         const taches = await tachesRepository.getPast()
@@ -67,13 +79,20 @@ routerTaches.post('/create/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
 
-        const newRencontres = await tachesRepository.createTaches(parameters)
+        const [results, metadata] = await tachesRepository.getConflict(parameters)
 
-        if (newRencontres) {
-            res.status(400).send("Erreur lors de la création")
-            return;
+        if (results.length > 0) {
+            res.status(400).send("Une tâche existe déjà sur cette période")
+            return
         } else {
-            res.status(201).end()
+            const newRencontres = await tachesRepository.createTaches(parameters)
+
+            if (newRencontres) {
+                res.status(400).send("Erreur lors de la création")
+                return;
+            } else {
+                res.status(201).end()
+            }
         }
 })
 

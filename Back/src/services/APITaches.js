@@ -10,6 +10,12 @@ class APITaches extends API {
         return res
     }
 
+    async getCurrent() {
+        let res =  await fetch(`${this.newUrl}list/current`, { method:'GET',
+                                                        headers : this.header})
+        return res
+    }
+
     async getComing() {
         let res =  await fetch(`${this.newUrl}list/coming`, { method:'GET',
                                                         headers : this.header})

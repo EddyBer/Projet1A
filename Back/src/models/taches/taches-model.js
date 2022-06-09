@@ -16,7 +16,6 @@ exports.Taches = sequelize.define('TACHES', {
   datedeb: {
     type: DataTypes.DATEONLY,
     allowNull: false,
-    unique : true
   },
   heuredeb: {
     type: DataTypes.TIME,

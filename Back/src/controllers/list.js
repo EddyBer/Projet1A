@@ -57,6 +57,27 @@ class listController extends BaseController {
         list.innerHTML = html
     }
 
+    async displayCurrent() {
+        let list = $('#list')
+        let html = ""
+        let listOfTasks = await this.model.getCurrent()
+
+        if (listOfTasks.ok) {
+            listOfTasks = await listOfTasks.json()
+
+            html = '<ul class="list-group" id="list">'
+
+            listOfTasks.taches[0].forEach(task => {
+                html += `<li class="list-group-item" onclick="listController.getDetails('${task.id}')">${task.libelle} : ${task.avancement}%</li>`
+            });
+            html += '</ul>'
+        } else {
+            html = "Error"
+            this.toast("error")
+        }
+        list.innerHTML = html
+    }
+
     async displayComing() {
         let list = $('#list')
         let html = ""
@@ -110,6 +131,7 @@ class listController extends BaseController {
                 this.displayAll()
                 break
             case 'CU':
+                this.displayCurrent()
                 break
             case 'C':
                 this.displayComing()

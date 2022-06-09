@@ -45,6 +45,11 @@ class Model {
         return res
     }
 
+    async getCurrent() {
+        let res = await this.apiTaches.getCurrent()
+        return res
+    }
+
     async getComing() {
         let res = await this.apiTaches.getComing()
         return res

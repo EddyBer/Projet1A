@@ -37,10 +37,10 @@ class connectController extends BaseController {
                 localStorage.setItem('Token',token.token)
                 navigate('home')
             } else {
-                this.toast("error")
+                this.toast("error","Invalid informations")
             }
         } else {
-            this.toast("error")
+            this.toast("error","Enter a correct email/password")
         }
     }
 }

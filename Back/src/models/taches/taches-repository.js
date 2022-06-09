@@ -35,11 +35,15 @@ exports.deleteTaches= async (id) => {
 }
 
 exports.getByDate = async (date) => {
-    return await Taches.findOne({
+    return await Taches.findAll({
         where: {
             datedeb:date
         }
     })
+}
+
+exports.getConflict = async (body) => {
+    return await sequelize.query(`SELECT * FROM "TACHES" WHERE (DATEDEB BETWEEN '${body.datedeb}' AND '${body.datefin}' OR DATEFIN BETWEEN '${body.datedeb}' AND '${body.datefin}') AND (HEUREDEB BETWEEN '${body.heuredeb}' AND '${body.heurefin}' OR HEUREFIN BETWEEN '${body.heuredeb}' AND '${body.heurefin}')`)
 }
 
 exports.getById= async (id) => {
@@ -56,8 +60,14 @@ exports.getComing = async () => {
     return await sequelize.query(`SELECT * FROM "TACHES" WHERE DATEDEB > '${now}'`)
 }
 
+exports.getCurrent = async () => {
+    let now = new Date()
+    now = now.toISOString()
+    return await sequelize.query(`SELECT * FROM "TACHES" WHERE DATEDEB < '${now}' AND AVANCEMENT BETWEEN 1 AND 99`)
+}
+
 exports.getPast = async () => {
     let now = new Date()
     now = now.toISOString()
-    return await sequelize.query(`SELECT * FROM "TACHES" WHERE DATEDEB < '${now}' AND AVANCEMENT < 100`)
+    return await sequelize.query(`SELECT * FROM "TACHES" WHERE DATEDEB < '${now}' AND AVANCEMENT = 0`)
 }
