@@ -101,7 +101,6 @@ class homeController extends BaseController {
                     task = await task.json()
 
                     if (task.taches.length > 0) {
-                        console.log(task)
                         task.taches.forEach(elem => {
                             html += `<span id=\"${elem.id}\" class=\"badge bg-success\" onclick=\"homeController.openModalUpdate('${elem.id}')\">${elem.libelle}</span>`
                             onclick = ``
@@ -139,44 +138,51 @@ class homeController extends BaseController {
         let currYear = $("#year")
         currMonth.innerHTML = month
         currYear.innerHTML = year
+        let first = 0
         let mon = month;
-        let d = new Date(year, mon);
+        let d = new Date(year, mon,date);
+
+        if (d.getDate() != 1) {
+            first = (d.getDate() - d.getDay()) + 1
+        } else {
+            first = d.getDate()
+        }
+
+        let firstday = new Date(d.setDate(first))
+        let lastday = new Date(d.setDate(first))
+
+        for (let i = this.getDay(firstday); i < 7 ; i++) {
+            lastday.setDate(lastday.getDate() + 1)
+        }
+        
         let html = ""
         let onclick = ""
         let table = '<table class="table table-striped table-bordered"><tr><th scope="col">Monday</th><th scope="col">Tuesday</th><th scope="col">Wednesday</th><th scope="col">Thursday</th><th scope="col">Friday</th><th scope="col">Saturday</th><th scope="col">Sunday</th></tr><tr>';
 
-        for (let i = 1; i < this.getDay(d); i++) {
+        for (let i = 1; i < this.getDay(firstday); i++) {
           table += '<td></td>';
         }
 
-        while (d.getMonth() == mon) {
-            if (this.getDay(d) == 6 || this.getDay(d) == 7) {
-                table += "<td class=\"day weekend\">" + d.getDate() + '</td>';
+        for (let i = this.getDay(firstday); i <= this.getDay(lastday); i++) {
+            if (this.getDay(firstday) == 6 || this.getDay(firstday) == 7) {
+                table += "<td class=\"day weekend\">" + firstday.getDate() + '</td>';
             } else {
-                let task = await this.model.getByDate(this.formatDate(d))
+                let task = await this.model.getByDate(this.formatDate(firstday))
                 if (task.ok) {
                     task = await task.json()
-                    html = `<span id=\"${task.taches.id}\" class=\"badge bg-success\">${task.taches.libelle}</span>`
-                    onclick = `homeController.openModalUpdate('${task.taches.id}')`
-                } else {
-                    html = ""
-                    onclick = ""
+                    if (task.taches.length > 0) {
+                        task.taches.forEach(elem => {
+                            html += `<span id=\"${elem.id}\" class=\"badge bg-success\" onclick=\"homeController.openModalUpdate('${elem.id}')\">${elem.libelle}</span>`
+                            onclick = ``
+                        });
+                    } else {
+                        html    = ""
+                        onclick = ""
+                    }
                 }
-
-                table += `<td class=\"day week\" onclick=\"${onclick}\";>` + d.getDate() + html + '</td>';
+                table += `<td class=\"day week\" onclick=\"${onclick}\";>` + firstday.getDate() + html + '</td>';
             }
-
-            if (this.getDay(d) % 7 == 0) { // sunday, last day of week - newline
-                table += '</tr><tr>';
-            }
-    
-            d.setDate(d.getDate() + 1);
-        }
-
-        if (this.getDay(d) != 1) {
-          for (let i = this.getDay(d); i < 7; i++) {
-            table += '<td></td>';
-          }
+            firstday.setDate(firstday.getDate() + 1);
         }
 
         table += '</tr></table>';
@@ -225,15 +231,18 @@ class homeController extends BaseController {
         if (this.getDay(d) == 6 || this.getDay(d) == 7) {
             table += "<td class=\"day weekend\">" + d.getDate() + '</td>';
         } else {
-            console.log(this.formatDate(d))
             let task = await this.model.getByDate(this.formatDate(d))
             if (task.ok) {
                 task = await task.json()
-                html = `<span id=\"${task.taches.id}\" class=\"badge bg-success\">${task.taches.libelle}</span>`
-                onclick = `homeController.openModalUpdate('${task.taches.id}')`
-            } else {
-                html = ""
-                onclick = `homeController.openModal()`
+                if (task.taches.length > 0) {
+                    task.taches.forEach(elem => {
+                        html += `<span id=\"${elem.id}\" class=\"badge bg-success\" onclick=\"homeController.openModalUpdate('${elem.id}')\">${elem.libelle}</span>`
+                        onclick = ``
+                    });
+                } else {
+                    html    = ""
+                    onclick = ""
+                }
             }
 
             table += `<td class=\"day week\" onclick=\"${onclick}\";>` + d.getDate() + html + '</td>';
@@ -300,6 +309,28 @@ class homeController extends BaseController {
         this.setHeaderCalendar(currYear,currMonth)
     }
 
+    nextWeek() {
+        let currMonth = parseInt($("#month").innerHTML)
+        let currYear = parseInt($("#year").innerHTML)
+        let startWeek = parseInt($("#month").innerHTML)
+        let endWeek = parseInt($("#year").innerHTML)
+
+
+        this.createCalendarWeek(calendar,currYear,currMonth,startWeek)
+        this.setHeaderCalendar(currYear,currMonth)
+    }
+
+    prevWeek() {
+        let currMonth = parseInt($("#month").innerHTML)
+        let currYear = parseInt($("#year").innerHTML)
+        let startWeek = parseInt($("#month").innerHTML)
+        let endWeek = parseInt($("#year").innerHTML)
+
+
+        this.createCalendarWeek(calendar,currYear,currMonth,startWeek)
+        this.setHeaderCalendar(currYear,currMonth)
+    }
+
     setDisplay() {
         let display = $('#display')
         let year    = new Date().getFullYear()
@@ -317,6 +348,8 @@ class homeController extends BaseController {
                 break
             case 'W':
                 this.createCalendarWeek(calendar, year, month,day)
+                next.setAttribute('onclick',"homeController.nextWeek()")
+                prev.setAttribute('onclick',"homeController.prevWeek()")
                 break
             case 'D':
                 this.createCalendarDay(calendar, new Date())
@@ -449,7 +482,6 @@ class homeController extends BaseController {
             })
 
             const newTask = await this.model.createTaches(params)
-            console.log(newTask)
             if (newTask.ok) {
                 this.myModal.hide()
                 navigate('home')
