@@ -31,7 +31,7 @@ class homeController extends BaseController {
         let nom         = $('#name-tache')
         let datedeb     = $('#date-debut')
         let heuredeb    = $('#heure-debut')
-        let datefin     = $('#date-debut')
+        let datefin     = $('#date-fin')
         let heurefin    = $('#heure-fin')
         let avancement  = $('#avancement-tache')
         let output_adv  = $('#output_adv')

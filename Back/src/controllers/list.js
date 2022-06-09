@@ -9,7 +9,7 @@ class listController extends BaseController {
         let nom         = $('#name-tache')
         let datedeb     = $('#date-debut')
         let heuredeb    = $('#heure-debut')
-        let datefin     = $('#date-debut')
+        let datefin     = $('#date-fin')
         let heurefin    = $('#heure-fin')
         let avancement  = $('#avancement-tache')
         let output_adv  = $('#output_adv')
@@ -22,6 +22,7 @@ class listController extends BaseController {
 
         if (task.ok) {
             task = await task.json()
+            console.log(task)
             nom.value        = task.taches.libelle 
             datedeb.value    = task.taches.datedeb 
             heuredeb.value   = task.taches.heuredeb 
