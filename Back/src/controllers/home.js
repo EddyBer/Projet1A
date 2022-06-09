@@ -165,11 +165,12 @@ class homeController extends BaseController {
             if (this.getDay(firstday) == 6 || this.getDay(firstday) == 7) {
                 table += "<td class=\"day weekend\">" + firstday.getDate() + '</td>';
             } else {
+                html = ""
                 let task = await this.model.getByDate(this.formatDate(firstday))
                 if (task.ok) {
                     task = await task.json()
-                    if (task.taches.length > 0) {
-                        task.taches.forEach(elem => {
+                    if (task.taches[0].length > 0) {
+                        task.taches[0].forEach(elem => {
                             html += `<span id=\"${elem.id}\" class=\"badge bg-success\" onclick=\"homeController.openModalUpdate('${elem.id}')\">${elem.libelle}</span>`
                             onclick = ``
                         });
@@ -232,8 +233,8 @@ class homeController extends BaseController {
             let task = await this.model.getByDate(this.formatDate(d))
             if (task.ok) {
                 task = await task.json()
-                if (task.taches.length > 0) {
-                    task.taches.forEach(elem => {
+                if (task.taches[0].length > 0) {
+                    task.taches[0].forEach(elem => {
                         html += `<span id=\"${elem.id}\" class=\"badge bg-success\" onclick=\"homeController.openModalUpdate('${elem.id}')\">${elem.libelle}</span>`
                         onclick = ``
                     });
