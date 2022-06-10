@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
-const {sequelize} = require('../db')
+const {sequelize} = require('../db');
+const { Taches } = require('../taches/taches-model');
 
 exports.User = sequelize.define('USER', {
   // Model attributes are defined here
@@ -28,3 +29,7 @@ exports.User = sequelize.define('USER', {
 }, {
     freezeTableName:false
 });
+
+// this.User.hasMany(Taches, {
+//     foreignKey:'user'
+// })

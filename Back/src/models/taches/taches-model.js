@@ -3,11 +3,14 @@ const { DataTypes } = require('sequelize');
 const {sequelize} = require('../db')
 
 exports.Taches = sequelize.define('TACHES', {
-  // Model attributes are defined here
   id: {
     type: DataTypes.UUID,
     primaryKey:true,
     defaultValue: DataTypes.UUIDV4
+  },
+  user: {
+    type: DataTypes.UUID,
+    allowNull: false
   },
   libelle : {
     type: DataTypes.STRING,

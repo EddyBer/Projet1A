@@ -3,6 +3,7 @@ const {Taches} = require('./taches-model')
 
 exports.createTaches = async (body) => {
     await Taches.create({
+        user       : body.user,
         libelle    : body.libelle,
         datedeb    : body.datedeb,
         heuredeb   : body.heuredeb,
@@ -14,6 +15,7 @@ exports.createTaches = async (body) => {
 
 exports.updateTask = async (body) => {
     await Taches.update({
+        user       : body.user,
         libelle    : body.libelle,
         datedeb    : body.datedeb,
         heuredeb   : body.heuredeb,

@@ -371,6 +371,7 @@ class homeController extends BaseController {
     }
 
     async updateTask(id) {
+        const infosUser = this.parseJwt(localStorage.getItem('Token'))
         let nom         = $('#name-tache')
         let datedeb     = $('#date-debut')
         let heuredeb    = $('#heure-debut')
@@ -420,6 +421,7 @@ class homeController extends BaseController {
         if (isValid) {
             const params = JSON.stringify({
                 id         : id,
+                user       : infosUser.userId,
                 libelle    : nom.value,
                 datedeb    : datedeb.value,
                 heuredeb   : heuredeb.value,
@@ -441,6 +443,7 @@ class homeController extends BaseController {
     }
 
     async createTask() {
+        const infosUser = this.parseJwt(localStorage.getItem('Token'))
         let nom         = $('#name-tache')
         let datedeb     = $('#date-debut')
         let heuredeb    = $('#heure-debut')
@@ -488,7 +491,17 @@ class homeController extends BaseController {
         }
 
         if (isValid) {
+            // const params = JSON.stringify({
+            //     libelle    : nom.value,
+            //     datedeb    : datedeb.value,
+            //     heuredeb   : heuredeb.value,
+            //     datefin    : datefin,
+            //     heurefin   : heurefin.value,
+            //     avancement : avancement.value
+            // })
+            
             const params = JSON.stringify({
+                user       : infosUser.userId,
                 libelle    : nom.value,
                 datedeb    : datedeb.value,
                 heuredeb   : heuredeb.value,

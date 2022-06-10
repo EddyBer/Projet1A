@@ -43,7 +43,7 @@ class creationController extends BaseController {
             const newUser = await this.model.register(params)
 
             if (newUser.ok) {
-                setTimeout(this.toast("success"),2000)
+                setTimeout(this.toast("success","Account created"),2000)
                 //this.toast("success")
                 clearTimeout();
                 navigate('connect')
@@ -51,7 +51,7 @@ class creationController extends BaseController {
                 this.toast("error","Mail adress already used")
             }
         } else {
-            this.toast("error")
+            this.toast("error","Error")
         }
     }
 
