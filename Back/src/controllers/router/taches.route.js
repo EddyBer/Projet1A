@@ -1,7 +1,8 @@
 const express = require('express');
 const routerTaches = express.Router();
 const tachesRepository = require('../../models/taches/taches-repository');
-const { authMiddleware } = require('../../core/middlewares')
+const { authMiddleware } = require('../../core/middlewares');
+const { param } = require('express-validator');
 
 routerTaches.get('/:params',authMiddleware,
     async (req,res) => {
@@ -80,6 +81,10 @@ routerTaches.get('/list/past',authMiddleware,
 routerTaches.post('/create/:params',authMiddleware,
     async (req,res) => {
         const parameters = JSON.parse(req.params['params'])
+
+        if (parameters.id == undefined) {
+            parameters.id = ""
+        }
 
         const [results, metadata] = await tachesRepository.getConflict(parameters)
 

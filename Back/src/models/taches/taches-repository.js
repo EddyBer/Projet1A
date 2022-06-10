@@ -43,7 +43,7 @@ exports.getByDate = async (body) => {
 }
 
 exports.getConflict = async (body) => {
-    return await sequelize.query(`SELECT * FROM "TACHES" WHERE (DATEDEB BETWEEN '${body.datedeb}' AND '${body.datefin}' OR DATEFIN BETWEEN '${body.datedeb}' AND '${body.datefin}') AND (HEUREDEB BETWEEN '${body.heuredeb}' AND '${body.heurefin}' OR HEUREFIN BETWEEN '${body.heuredeb}' AND '${body.heurefin}')`)
+    return await sequelize.query(`SELECT * FROM "TACHES" WHERE ID::text <> '${body.id}' AND (DATEDEB BETWEEN '${body.datedeb}' AND '${body.datefin}' OR DATEFIN BETWEEN '${body.datedeb}' AND '${body.datefin}') AND (HEUREDEB BETWEEN '${body.heuredeb}' AND '${body.heurefin}' OR HEUREFIN BETWEEN '${body.heuredeb}' AND '${body.heurefin}')`)
 }
 
 exports.getById= async (id) => {
