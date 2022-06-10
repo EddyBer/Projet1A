@@ -34,8 +34,8 @@ class APITaches extends API {
         return res
     }
 
-    async getTachesByDate(datedeb) {
-        let res =  await fetch(`${this.newUrl}${datedeb}`, { method:'GET',
+    async getTachesByDate(params) {
+        let res =  await fetch(`${this.newUrl}${params}`, { method:'GET',
                                                         headers : this.header})
         return res
     }

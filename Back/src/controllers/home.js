@@ -97,7 +97,13 @@ class homeController extends BaseController {
                 table += "<td class=\"day weekend\">" + d.getDate() + '</td>';
             } else {
                 html = ""
-                let task = await this.model.getByDate(this.formatDate(d))
+                let infosUser = this.parseJwt(localStorage.getItem('Token'))
+                
+                let params = JSON.stringify({
+                    user       : infosUser.userId,
+                    date       : this.formatDate(d)
+                })
+                let task = await this.model.getByDate(params)
                 if (task.ok) {
                     task = await task.json()
                     if (task.taches[0].length > 0) {
@@ -166,7 +172,13 @@ class homeController extends BaseController {
                 table += "<td class=\"day weekend\">" + firstday.getDate() + '</td>';
             } else {
                 html = ""
-                let task = await this.model.getByDate(this.formatDate(firstday))
+                let infosUser = this.parseJwt(localStorage.getItem('Token'))
+
+                let params = JSON.stringify({
+                    user       : infosUser.userId,
+                    date       : this.formatDate(firstday)
+                })
+                let task = await this.model.getByDate(params)
                 if (task.ok) {
                     task = await task.json()
                     if (task.taches[0].length > 0) {
@@ -230,7 +242,14 @@ class homeController extends BaseController {
         if (this.getDay(d) == 6 || this.getDay(d) == 7) {
             table += "<td class=\"day weekend\">" + d.getDate() + '</td>';
         } else {
-            let task = await this.model.getByDate(this.formatDate(d))
+
+            let infosUser = this.parseJwt(localStorage.getItem('Token'))
+
+                let params = JSON.stringify({
+                    user       : infosUser.userId,
+                    date       : this.formatDate(d)
+                })
+                let task = await this.model.getByDate(params)
             if (task.ok) {
                 task = await task.json()
                 if (task.taches[0].length > 0) {
@@ -491,15 +510,7 @@ class homeController extends BaseController {
         }
 
         if (isValid) {
-            // const params = JSON.stringify({
-            //     libelle    : nom.value,
-            //     datedeb    : datedeb.value,
-            //     heuredeb   : heuredeb.value,
-            //     datefin    : datefin,
-            //     heurefin   : heurefin.value,
-            //     avancement : avancement.value
-            // })
-            
+
             const params = JSON.stringify({
                 user       : infosUser.userId,
                 libelle    : nom.value,

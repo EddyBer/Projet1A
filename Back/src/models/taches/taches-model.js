@@ -8,7 +8,7 @@ exports.Taches = sequelize.define('TACHES', {
     primaryKey:true,
     defaultValue: DataTypes.UUIDV4
   },
-  user: {
+  iduser: {
     type: DataTypes.UUID,
     allowNull: false
   },

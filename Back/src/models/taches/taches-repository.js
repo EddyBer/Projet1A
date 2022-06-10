@@ -3,7 +3,7 @@ const {Taches} = require('./taches-model')
 
 exports.createTaches = async (body) => {
     await Taches.create({
-        user       : body.user,
+        iduser     : body.user,
         libelle    : body.libelle,
         datedeb    : body.datedeb,
         heuredeb   : body.heuredeb,
@@ -15,7 +15,7 @@ exports.createTaches = async (body) => {
 
 exports.updateTask = async (body) => {
     await Taches.update({
-        user       : body.user,
+        iduser     : body.user,
         libelle    : body.libelle,
         datedeb    : body.datedeb,
         heuredeb   : body.heuredeb,
@@ -36,9 +36,9 @@ exports.deleteTaches= async (id) => {
     })
 }
 
-exports.getByDate = async (date) => {
-    
-    return await sequelize.query(`SELECT * FROM "TACHES" WHERE (DATEDEB <= '${date}' AND DATEFIN >= '${date}') OR (DATEDEB = '${date}' AND DATEFIN = '${date}')`)
+exports.getByDate = async (body) => {
+
+    return await sequelize.query(`SELECT * FROM "TACHES" WHERE IDUSER = '${body.user}' AND (DATEDEB <= '${body.date}' AND DATEFIN >= '${body.date}') OR (DATEDEB = '${body.date}' AND DATEFIN = '${body.date}')`)
 
 }
 

@@ -24,7 +24,8 @@ class BaseController {
     }
 
     formatDate(date) {
-        let formatted_date =  date.getFullYear() + '-' +  (date.getMonth() + 1) + "-" + date.getDate()
+        let newDate = new Date (date)
+        let formatted_date =  newDate.getFullYear() + '-' +  (newDate.getMonth() + 1) + "-" + newDate.getDate()
         return formatted_date.toString();
     }
 

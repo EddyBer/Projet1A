@@ -29,9 +29,8 @@ class Model {
         return res
     }
 
-
-    async getByDate(datedeb) {
-        let res = await this.apiTaches.getTachesByDate(datedeb)
+    async getByDate(params) {
+        let res = await this.apiTaches.getTachesByDate(params)
         return res
     }
 

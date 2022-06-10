@@ -3,9 +3,11 @@ const routerTaches = express.Router();
 const tachesRepository = require('../../models/taches/taches-repository');
 const { authMiddleware } = require('../../core/middlewares')
 
-routerTaches.get('/:datedeb',authMiddleware,
+routerTaches.get('/:params',authMiddleware,
     async (req,res) => {
-        const taches = await tachesRepository.getByDate(req.params.datedeb)
+        const parameters = JSON.parse(req.params['params'])
+
+        const taches = await tachesRepository.getByDate(parameters)
         
         if (!taches) {
             res.status(404).send('Aucune taches trouvées')
